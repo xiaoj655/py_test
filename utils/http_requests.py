@@ -6,8 +6,11 @@ from config import cfg
 
 class HttpRequest():
     def __init__(self):
-        self.headers = {}
-        self.session = requests.Session()
+        self.headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+            "Content-Type": "application/json"
+        }
+        self.session = requests.sessions.Session()
     
     def login(self):
         sso_token = self.session.post(
@@ -25,19 +28,43 @@ class HttpRequest():
     def set_token(self, token):
         self.token = token
         self.headers.update({
-            "Authorization": token
+            "Authorization": f"Bearer {self.token}"
         })
     
-    def get(self, path, params, headers={}):
+    def get(self, path, params=None, headers={}):
         headers.update(self.headers)
-        ret = self.session.get(params, headers=headers)
-        return ret.json()
+        ret = self.session.get(path, params=params, headers=headers)
+        return ret
     
-    def post(self, path, params,data=None, json=None, headers={}):
+    def post(self, path, params = None,data=None, json=None, headers={}):
         headers.update(self.headers)
-        ret = self.session.post(
-                 path, data=data, json=json,params=params, headers=headers
+        # ret = self.session.post(
+        #          path, data=data, json=json,params=params, headers=headers
+        #         )
+        ret = requests.post(
+            path,
+            json=json,
+            data=data,
+            headers=headers
+        )
+        return ret
+    
+    def delete(self, path, params={}, headers={}):
+        headers.update(self.headers)
+        ret = self.session.delete(
+                 path, params=params, headers=headers
                 )
         return ret.json()
+    
+    def put(self, path, params,json={}, data=None, headers={}, is_json=True):
+        headers.update(self.headers)
+        ret = self.session.put(
+            path,
+            params=params,
+            data=data,
+            headers=headers,
+            json=json
+        )
+        return ret
 
 http = HttpRequest()

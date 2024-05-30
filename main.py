@@ -1,8 +1,4 @@
-import configparser
-import sys,os
-import requests
-from utils.http_requests import http
-import pytest
+import os
 
-if __name__=='__main__':
-    pytest.main(['-vs', 'test_demo', '--aluredir=./output'])
+if __name__ == '__main__':
+    os.system(f"pytest {os.path.join(os.path.dirname(__file__), 'tests/ac_paper.py')} -s")
