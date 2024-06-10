@@ -5,12 +5,11 @@ from config import cfg
 
 
 class HttpRequest():
-    def __init__(self):
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-            "Content-Type": "application/json"
-        }
-        self.session = requests.sessions.Session()
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+        "Content-Type": "application/json"
+    }
+    session = requests.sessions.Session()
     
     def login(self):
         sso_token = self.session.post(
@@ -38,13 +37,11 @@ class HttpRequest():
     
     def post(self, path, params = None,data=None, json=None, headers={}):
         headers.update(self.headers)
-        # ret = self.session.post(
-        #          path, data=data, json=json,params=params, headers=headers
-        #         )
         ret = requests.post(
             path,
             json=json,
             data=data,
+            params=params,
             headers=headers
         )
         return ret
@@ -54,7 +51,7 @@ class HttpRequest():
         ret = self.session.delete(
                  path, params=params, headers=headers
                 )
-        return ret.json()
+        return ret
     
     def put(self, path, params,json={}, data=None, headers={}, is_json=True):
         headers.update(self.headers)
